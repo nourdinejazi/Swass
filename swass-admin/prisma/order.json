@@ -1,0 +1,67 @@
+[
+  {
+    "num": 1,
+    "modeLivraison": "Standard",
+    "modePaiement": "Credit Card",
+    "location": "123 Main St",
+    "postalCode": "12345",
+    "city": "Metropolis",
+    "country": "Countryland",
+    "nom": "John",
+    "prenom": "Doe",
+    "phone": "123-456-7890",
+    "phone2": null
+  },
+  {
+    "num": 2,
+    "modeLivraison": "Express",
+    "modePaiement": "PayPal",
+    "location": "456 Elm St",
+    "postalCode": "67890",
+    "city": "Gotham",
+    "country": "Countryland",
+    "nom": "Jane",
+    "prenom": "Smith",
+    "phone": "098-765-4321",
+    "phone2": "111-222-3333"
+  },
+  {
+    "num": 3,
+    "modeLivraison": "Standard",
+    "modePaiement": "Credit Card",
+    "location": "789 Oak St",
+    "postalCode": "54321",
+    "city": "Star City",
+    "country": "Countryland",
+    "nom": "Alice",
+    "prenom": "Johnson",
+    "phone": "555-555-5555",
+    "phone2": null
+  },
+  {
+    "num": 4,
+    "modeLivraison": "Express",
+    "modePaiement": "Credit Card",
+    "location": "321 Maple St",
+    "postalCode": "98765",
+    "city": "Central City",
+    "country": "Countryland",
+    "nom": "Bob",
+    "prenom": "Brown",
+    "phone": "444-444-4444",
+    "phone2": null
+  },
+  {
+    "num": 5,
+    "modeLivraison": "Standard",
+    "modePaiement": "PayPal",
+    "location": "654 Pine St",
+    "postalCode": "13579",
+    "city": "Coast City",
+    "country": "Countryland",
+    "nom": "Charlie",
+    "prenom": "White",
+    "phone": "222-222-2222",
+    "phone2": null
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "orderId": "1",
+    "ref": "PROD001",
+    "couleurId": "Red",
+    "tailleId": "M",
+    "quantity": 2
+  },
+  {
+    "orderId": "1",
+    "ref": "PROD002",
+    "couleurId": "Green",
+    "tailleId": "L",
+    "quantity": 1
+  },
+  {
+    "orderId": "2",
+    "ref": "PROD003",
+    "couleurId": "Blue",
+    "tailleId": "S",
+    "quantity": 1
+  },
+  {
+    "orderId": "3",
+    "ref": "PROD004",
+    "couleurId": "Yellow",
+    "tailleId": "XL",
+    "quantity": 1
+  },
+  {
+    "orderId": "4",
+    "ref": "PROD005",
+    "couleurId": "Purple",
+    "tailleId": "M",
+    "quantity": 3
+  }
+]
