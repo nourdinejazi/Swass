@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  swass-store:
+    container_name: swass-store
+    image: swass-store
+    build:
+      context: ./swass-store
+      dockerfile: swass-store.dockerfile
+    ports:
+      - 4000:4000
+    environment:
+      - DATABASE_URL=postgresql://postgres:M49BzDnb17JgC5Vqddn2QsdtXoP6b0@manager_prod_db:5432/postgres?schema=public
+    restart: always
+
+  swass-admin:
+    container_name: swass-admin
+    image: swass-admin
+    build:
+      context: ./swass-admin
+      dockerfile: swass-admin.dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_URL=postgresql://postgres:M49BzDnb17JgC5Vqddn2QsdtXoP6b0@manager_prod_db:5432/postgres?schema=public
+    restart: always
+
+  swassdb:
+    container_name: swassdb
+    image: postgres:15.5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: M49BzDnb17JgC5Vqddn2QsdtXoP6b0
+      POSTGRES_DB: postgres
+      PGDATA: /data
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+    ports:
+      - "8080:8080"
+
+volumes:
+  pg_data: {}
