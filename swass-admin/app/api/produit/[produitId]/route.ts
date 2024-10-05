@@ -51,15 +51,17 @@ export async function PATCH(
     for (let [key, value] of formData.entries()) {
       if (key.includes("images")) {
         if (!(value instanceof File)) {
-          value = JSON.parse(value as string);
+          value = JSON.parse(value);
         }
+
         if (value instanceof File) {
           Object.assign(value, {
             path: value.name,
           });
         }
+
         fileArray.push(
-          Object.assign(value, {
+          Object.assign(value as never, {
             index: parseInt(key.split("-")[1]),
           })
         );

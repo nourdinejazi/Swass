@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     for (let [key, value] of formData.entries()) {
       if (value instanceof File || key.includes("images")) {
         fileArray.push(
-          Object.assign(value, {
+          Object.assign(value as never, {
             index: parseInt(key.split("-")[1]),
           })
         );
