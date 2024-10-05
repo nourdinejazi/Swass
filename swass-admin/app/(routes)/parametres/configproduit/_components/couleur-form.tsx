@@ -68,8 +68,6 @@ export function CouleurForm({ couleurs }: { couleurs: Couleurs[] }) {
   }
 
   useEffect(() => {
-    console.log("heree");
-
     const name = couleurs.find(
       (couleur) => couleur.name === form.getValues("name")
     );
