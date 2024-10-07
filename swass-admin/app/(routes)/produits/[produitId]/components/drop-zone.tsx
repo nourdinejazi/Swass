@@ -105,7 +105,7 @@ export default function DropZone({
   const removeAll = () => {
     setFiles([]);
   };
-
+  console.log("files", files);
   return (
     <div className="border  rounded-xl border-dashed   min-w-[800px]  px-8 pt-8 pb-2">
       <div {...getRootProps({})}>
