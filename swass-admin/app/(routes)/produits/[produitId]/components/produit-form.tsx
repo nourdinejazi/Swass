@@ -125,6 +125,7 @@ const ProduitForm = ({
               if (res.success) {
                 // form.reset();
                 toast.success(res.success);
+                router.push("/produits");
               } else if (res.error) {
                 toast.error(res.error);
               }
@@ -138,16 +139,13 @@ const ProduitForm = ({
             .then((res) => {
               if (res.success) {
                 toast.success(res.success);
-                window.location.reload();
+                router.push("/produits");
               } else if (res.error) {
                 toast.error(res.error);
               }
             });
         }
       });
-
-      router.push("/produits");
-      router.refresh();
     } catch (error) {
       console.error(error);
     }
