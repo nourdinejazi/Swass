@@ -53,42 +53,42 @@ export const StockItemSchema = z.object({
 });
 
 export const ProduitFormSchema = z.object({
-  reference: z.string().length(7, {
+  reference: z.string().length(3, {
     message: "La référence doit contenir 7 caractères",
   }),
 
-  nom: z.string().min(1, {
-    message: "Le nom doit contenir au moins 1 caractères",
-  }),
-  description: z.string(),
+  // nom: z.string().min(1, {
+  //   message: "Le nom doit contenir au moins 1 caractères",
+  // }),
+  // description: z.string(),
 
-  prix: z.coerce
-    .number()
-    .multipleOf(0.001)
-    .refine((value) => value > 0, {
-      message: "Le montant doit être un nombre positif",
-    }),
-  newCollection: z.boolean(),
-  archived: z.boolean(),
-  etat: z.enum(["Disponible", "En repture", ""]),
-  model: z.string(),
-  stock: z.array(StockItemSchema).min(1, {
-    message: "Veuillez ajouter le stock",
-  }),
-  categorie: z.string(),
-  famille: z.string(),
+  // prix: z.coerce
+  //   .number()
+  //   .multipleOf(0.001)
+  //   .refine((value) => value > 0, {
+  //     message: "Le montant doit être un nombre positif",
+  //   }),
+  // newCollection: z.boolean(),
+  // archived: z.boolean(),
+  // etat: z.enum(["Disponible", "En repture", ""]),
+  // model: z.string(),
+  // stock: z.array(StockItemSchema).min(1, {
+  //   message: "Veuillez ajouter le stock",
+  // }),
+  // categorie: z.string(),
+  // famille: z.string(),
   images: z.array(z.any()).min(1, {
     message: "Veuillez ajouter au moins une image",
   }),
-  longeur: z.enum(["Midi", "Mini", "Maxi", ""]),
-  promotion: z.coerce
-    .number()
-    .int({
-      message: "Promotion doit être un nombre sans virgule",
-    })
-    .refine((value) => value >= 0 && value <= 100, {
-      message: "Promotion doit être un nombre positif et inférieur à 100",
-    }),
+  // longeur: z.enum(["Midi", "Mini", "Maxi", ""]),
+  // promotion: z.coerce
+  //   .number()
+  //   .int({
+  //     message: "Promotion doit être un nombre sans virgule",
+  //   })
+  //   .refine((value) => value >= 0 && value <= 100, {
+  //     message: "Promotion doit être un nombre positif et inférieur à 100",
+  //   }),
 });
 export const OrderSchema = z.object({
   personalInfo: z.object({

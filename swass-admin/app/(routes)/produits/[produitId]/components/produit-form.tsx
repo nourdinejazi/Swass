@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,27 +16,13 @@ import {
 
 import { ProduitFormSchema } from "@/schemas/settings";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { Categorie, Couleurs, Famille, Models, Tailles } from "@prisma/client";
 import toast from "react-hot-toast";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import SizeStockForm from "./stock-form";
 import { Button } from "@/components/ui/button";
 import SmallSpinner from "@/components/small-spinner";
 import DropZone from "./drop-zone";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import Currency from "@/components/currency";
-import { TicketPercent } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface ProduitFormProps {
   initialData: any;
@@ -86,19 +71,19 @@ const ProduitForm = ({
   const onSubmit = async (data: z.infer<typeof ProduitFormSchema>) => {
     try {
       const formData = new FormData();
-      formData.append("nom", data.nom);
-      formData.append("description", data.description);
-      formData.append("prix", data.prix.toString());
+      // formData.append("nom", data.nom);
+      // formData.append("description", data.description);
+      // formData.append("prix", data.prix.toString());
       formData.append("reference", data.reference);
-      formData.append("newCollection", data.newCollection.toString());
-      formData.append("archived", data.archived.toString());
-      formData.append("etat", data.etat);
-      formData.append("modele", data.model);
-      formData.append("famille", data.famille);
-      formData.append("categorie", data.categorie);
-      formData.append("promotion", data.promotion.toString());
-      formData.append("longeur", data.longeur);
-      formData.append("stock", JSON.stringify(data.stock));
+      // formData.append("newCollection", data.newCollection.toString());
+      // formData.append("archived", data.archived.toString());
+      // formData.append("etat", data.etat);
+      // formData.append("modele", data.model);
+      // formData.append("famille", data.famille);
+      // formData.append("categorie", data.categorie);
+      // formData.append("promotion", data.promotion.toString());
+      // formData.append("longeur", data.longeur);
+      // formData.append("stock", JSON.stringify(data.stock));
 
       data.images.forEach((image) => {
         if (image instanceof File)
@@ -107,12 +92,12 @@ const ProduitForm = ({
         else formData.append(`images-${image.index}`, JSON.stringify(image));
       });
 
-      // console.log("DATA  before the formDATA : ", data);
+      console.log("DATA  before the formDATA : ", data);
 
-      // console.log(
-      //   "DATA SENT TO SERVER : ",
-      //   Object.fromEntries(formData.entries())
-      // );
+      console.log(
+        "DATA SENT TO SERVER : ",
+        Object.fromEntries(formData.entries())
+      );
 
       startTransition(async () => {
         if (initialData) {
@@ -125,7 +110,7 @@ const ProduitForm = ({
               if (res.success) {
                 // form.reset();
                 toast.success(res.success);
-                router.push("/produits");
+                // router.push("/produits");
               } else if (res.error) {
                 toast.error(res.error);
               }
@@ -139,7 +124,7 @@ const ProduitForm = ({
             .then((res) => {
               if (res.success) {
                 toast.success(res.success);
-                router.push("/produits");
+                // router.push("/produits");
               } else if (res.error) {
                 toast.error(res.error);
               }
@@ -170,31 +155,33 @@ const ProduitForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="max-w-[1500px] h-full space-y-5 py-8         "
         >
-          <div className="max-w-3xl overflow-auto  bg-white p-8 space-y-5   border border-primary  rounded-lg  ">
+          <FormField
+            control={form.control}
+            name="reference"
+            render={({ field }) => (
+              <FormItem className="flex flex-col items-start justify-center  ">
+                <FormLabel className="text-base">Référence</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    disabled={isPending}
+                    placeholder=""
+                    className="max-w-[400px]"
+                    type="text"
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* <div className="max-w-3xl overflow-auto  bg-white p-8 space-y-5   border border-primary  rounded-lg  ">
             <h4 className="font-medium">Général</h4>
             <Separator />
+      
             <div className="flex  items-center   justify-start gap-5 max-w-xl">
-              <FormField
-                control={form.control}
-                name="reference"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col items-start justify-center  ">
-                    <FormLabel className="text-base">Référence</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder=""
-                        className="max-w-[400px]"
-                        type="text"
-                      />
-                    </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+         
               <FormField
                 control={form.control}
                 name="nom"
@@ -510,7 +497,7 @@ const ProduitForm = ({
                 </TableRow>
               </TableBody>
             </Table>
-          </div>
+          </div> */}
           <div className=" bg-white p-8 max-w-[900px] space-y-5 overflow-auto   border border-primary  rounded-lg  ">
             <h4 className="font-medium  ">Media</h4>
             <Separator />
@@ -525,7 +512,7 @@ const ProduitForm = ({
               )}
             />
           </div>
-          <div className=" bg-white p-8 space-y-5 max-w-xl  border border-primary  rounded-lg  ">
+          {/* <div className=" bg-white p-8 space-y-5 max-w-xl  border border-primary  rounded-lg  ">
             <FormField
               control={form.control}
               name="promotion"
@@ -570,7 +557,7 @@ const ProduitForm = ({
                 </FormItem>
               )}
             />
-          </div>
+          </div> */}
           <div className="w-full flex justify-center gap-5 sm:justfiy-center  mt-10 flex-wrap   ">
             <Button
               className="w-[150px] bg-[#E9ECEF] text-[#6C757D] hover:bg-[#E9ECEF] "

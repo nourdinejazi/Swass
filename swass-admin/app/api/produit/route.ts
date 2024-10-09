@@ -1,9 +1,5 @@
-import { ProduitFormSchema } from "@/schemas/settings";
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
-import fs from "node:fs/promises";
 import queryString from "query-string";
 
 const corsHeaders = {
@@ -21,175 +17,195 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const formDataValues = Object.fromEntries(formData.entries());
 
-    const fileArray = [];
+    const fileArray: Array<{ img: File; index: number }> = [];
 
     for (let [key, value] of formData.entries()) {
-      if (value instanceof File || key.includes("images")) {
-        fileArray.push(
-          Object.assign(value as never, {
-            index: parseInt(key.split("-")[1]),
-          })
-        );
+      if (value instanceof File && key.includes("images")) {
+        fileArray.push({
+          img: value as File,
+          index: parseInt(key.split("-")[1]),
+        });
       }
     }
 
-    let values: z.infer<typeof ProduitFormSchema> = {
-      reference: formDataValues.reference.toString(),
-      nom: formDataValues.nom.toString(),
-      description: formDataValues.description.toString(),
-      categorie: formDataValues.categorie.toString(),
-      famille: formDataValues.famille.toString(),
+    // let values: z.infer<typeof ProduitFormSchema> = {
+    //   reference: formDataValues.reference.toString(),
+    //   nom: formDataValues.nom.toString(),
+    //   description: formDataValues.description.toString(),
+    //   categorie: formDataValues.categorie.toString(),
+    //   famille: formDataValues.famille.toString(),
 
-      model: formDataValues.modele.toString(),
-      etat: formDataValues.etat.toString() as "" | "Disponible" | "En repture",
-      longeur: formDataValues.longeur.toString() as
-        | ""
-        | "Midi"
-        | "Mini"
-        | "Maxi",
-      stock: JSON.parse(formDataValues.stock as string),
-      prix: Number(formDataValues.prix),
-      promotion: Number(formDataValues.promotion),
-      newCollection: formDataValues.newCollection === "true",
-      archived: formDataValues.archived === "true",
-      images: fileArray,
-    };
+    //   model: formDataValues.modele.toString(),
+    //   etat: formDataValues.etat.toString() as "" | "Disponible" | "En repture",
+    //   longeur: formDataValues.longeur.toString() as
+    //     | ""
+    //     | "Midi"
+    //     | "Mini"
+    //     | "Maxi",
+    //   stock: JSON.parse(formDataValues.stock as string),
+    //   prix: Number(formDataValues.prix),
+    //   promotion: Number(formDataValues.promotion),
+    //   newCollection: formDataValues.newCollection === "true",
+    //   archived: formDataValues.archived === "true",
+    //   images: fileArray,
+    // };
 
-    const validatedFields = ProduitFormSchema.safeParse(values);
+    // const validatedFields = ProduitFormSchema.safeParse(values);
 
-    if (!validatedFields.success) {
-      console.log(validatedFields.error.message);
-      return NextResponse.json({ error: "Invalid fields!" }, { status: 400 });
-    }
+    // if (!validatedFields.success) {
+    //   console.log(validatedFields.error.message);
+    //   return NextResponse.json({ error: "Invalid fields!" }, { status: 400 });
+    // }
 
-    const data = { ...validatedFields.data };
+    // const data = { ...validatedFields.data };
 
-    // check for model
-    // if (
-    //   !uniqueCouleurStock(data.couleurStock) ||
-    //   !uniqueSizeStock(data.sizeStock)
-    // )
+    // // check for model
+    // // if (
+    // //   !uniqueCouleurStock(data.couleurStock) ||
+    // //   !uniqueSizeStock(data.sizeStock)
+    // // )
+    // //   return NextResponse.json(
+    // //     { error: "deux champ avec le meme couleur ou taille!" },
+    // //     { status: 400 }
+    // //   );
+
+    // const produit = await db.produit.findUnique({
+    //   where: {
+    //     reference: data.reference,
+    //   },
+    // });
+
+    // if (produit)
     //   return NextResponse.json(
-    //     { error: "deux champ avec le meme couleur ou taille!" },
+    //     { error: "référence est déjà existant !" },
     //     { status: 400 }
     //   );
 
-    const produit = await db.produit.findUnique({
-      where: {
-        reference: data.reference,
-      },
-    });
+    // const model = await db.models.findUnique({
+    //   where: {
+    //     name: data.model,
+    //   },
+    // });
 
-    if (produit)
-      return NextResponse.json(
-        { error: "référence est déjà existant !" },
-        { status: 400 }
-      );
+    // if (!model)
+    //   return NextResponse.json(
+    //     { error: "Modéle n'est pas existant !" },
+    //     { status: 400 }
+    //   );
 
-    const model = await db.models.findUnique({
-      where: {
-        name: data.model,
-      },
-    });
+    // //check for categorie
+    // const categorie = await db.categorie.findUnique({
+    //   where: {
+    //     name: data.categorie,
+    //   },
+    // });
+    // if (!categorie)
+    //   return NextResponse.json(
+    //     { error: "Categorie n'est pas existant !" },
+    //     { status: 400 }
+    //   );
 
-    if (!model)
-      return NextResponse.json(
-        { error: "Modéle n'est pas existant !" },
-        { status: 400 }
-      );
-
-    //check for categorie
-    const categorie = await db.categorie.findUnique({
-      where: {
-        name: data.categorie,
-      },
-    });
-    if (!categorie)
-      return NextResponse.json(
-        { error: "Categorie n'est pas existant !" },
-        { status: 400 }
-      );
+    // try {
+    //   await db.produit.create({
+    //     data: {
+    //       reference: data.reference,
+    //       nom: data.nom,
+    //       description: data.description,
+    //       prix: data.prix,
+    //       prixFinal: data.promotion
+    //         ? data.prix - data.prix * (data.promotion / 100)
+    //         : data.prix,
+    //       newCollection: data.newCollection,
+    //       archived: data.archived,
+    //       etat: data.etat,
+    //       longeur: data.longeur,
+    //       images: {
+    //         createMany: {
+    //           data: [
+    //             ...data.images.map((image) => {
+    //               return {
+    //                 path: `/uploads/produits/${data.reference}/${image.name}`,
+    //                 index: image.index,
+    //               };
+    //             }),
+    //           ],
+    //         },
+    //       },
+    //       stock: {
+    //         createMany: {
+    //           data: [
+    //             ...data.stock.map((stock) => {
+    //               return {
+    //                 stock: stock.stock,
+    //                 couleurId: stock.couleurId,
+    //                 tailleId: stock.tailleId,
+    //               };
+    //             }),
+    //           ],
+    //         },
+    //       },
+    //       promotion: data.promotion,
+    //       categorie: {
+    //         connect: {
+    //           name: data.categorie,
+    //         },
+    //       },
+    //       famille: {
+    //         connect: {
+    //           name: data.famille,
+    //         },
+    //       },
+    //       model: {
+    //         connect: {
+    //           name: data.model,
+    //         },
+    //       },
+    //     },
+    //   });
+    // } catch (error) {
+    //   console.log("[ADD-PRODUIT-EROOR]", error);
+    //   return NextResponse.json(
+    //     { error: "Les Champs sont invalides !" },
+    //     { status: 400 }
+    //   );
+    // }
+    const data = {
+      images: fileArray,
+      reference: formDataValues.reference.toString(),
+    };
 
     try {
-      await db.produit.create({
-        data: {
-          reference: data.reference,
-          nom: data.nom,
-          description: data.description,
-          prix: data.prix,
-          prixFinal: data.promotion
-            ? data.prix - data.prix * (data.promotion / 100)
-            : data.prix,
-          newCollection: data.newCollection,
-          archived: data.archived,
-          etat: data.etat,
-          longeur: data.longeur,
-          images: {
-            createMany: {
-              data: [
-                ...data.images.map((image) => {
-                  return {
-                    path: `/uploads/produits/${data.reference}/${image.name}`,
-                    index: image.index,
-                  };
-                }),
-              ],
-            },
-          },
-          stock: {
-            createMany: {
-              data: [
-                ...data.stock.map((stock) => {
-                  return {
-                    stock: stock.stock,
-                    couleurId: stock.couleurId,
-                    tailleId: stock.tailleId,
-                  };
-                }),
-              ],
-            },
-          },
-          promotion: data.promotion,
-          categorie: {
-            connect: {
-              name: data.categorie,
-            },
-          },
-          famille: {
-            connect: {
-              name: data.famille,
-            },
-          },
-          model: {
-            connect: {
-              name: data.model,
-            },
-          },
-        },
+      const filesData = new FormData();
+
+      filesData.append("reference", data.reference);
+      data.images.forEach((file) => {
+        filesData.append("images", file.img);
+      });
+
+      await fetch("http://localhost:3002/media/produits", {
+        method: "POST",
+        body: filesData,
       });
     } catch (error) {
-      console.log("[ADD-PRODUIT-EROOR]", error);
-      return NextResponse.json(
-        { error: "Les Champs sont invalides !" },
-        { status: 400 }
-      );
+      console.log("[SEND-IMAGES-EROOR]", error);
+      return new NextResponse("Internal error", { status: 500 });
     }
 
     // umplaod images
-    data.images.forEach(async (file) => {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = new Uint8Array(arrayBuffer);
-      await fs.mkdir(`./public/uploads/produits/${data.reference}`, {
-        recursive: true,
-      });
+    // data.images.forEach(async (file) => {
+    //   const arrayBuffer = await file.arrayBuffer();
+    //   const buffer = new Uint8Array(arrayBuffer);
+    //   await fs.mkdir(`./public/uploads/produits/${data.reference}`, {
+    //     recursive: true,
+    //   });
 
-      await fs.writeFile(
-        `./public/uploads/produits/${data.reference}/${file.name}`,
-        buffer
-      );
-    });
+    //   await fs.writeFile(
+    //     `./public/uploads/produits/${data.reference}/${file.name}`,
+    //     buffer
+    //   );
+    // });
 
-    revalidatePath(`/produit`);
+    // revalidatePath(`/produit`);
 
     return NextResponse.json({ success: "Produit  ajouté avec succés" });
   } catch (error) {
