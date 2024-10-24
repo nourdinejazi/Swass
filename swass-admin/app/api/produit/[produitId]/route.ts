@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import fs from "node:fs/promises";
-import * as fsr from "fs";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET",
@@ -46,25 +45,26 @@ export async function PATCH(
     const formData = await req.formData();
     const formDataValues = Object.fromEntries(formData.entries());
 
-    const fileArray = [];
+    const fileArray: Array<{ img: File | { path: string }; index: number }> =
+      [];
 
     for (let [key, value] of formData.entries()) {
       if (key.includes("images")) {
         if (!(value instanceof File)) {
-          value = JSON.parse(value);
-        }
-
-        if (value instanceof File) {
-          Object.assign(value, {
-            path: value.name,
+          fileArray.push({
+            img: JSON.parse(value),
+            index: parseInt(key.split("-")[1]),
           });
         }
 
-        fileArray.push(
-          Object.assign(value as never, {
+        if (value instanceof File) {
+          fileArray.push({
+            img: Object.assign(value, {
+              path: value.name,
+            }) as File,
             index: parseInt(key.split("-")[1]),
-          })
-        );
+          });
+        }
       }
     }
 
@@ -217,13 +217,13 @@ export async function PATCH(
           images: {
             createMany: {
               data: [
-                ...data.images.map((image) => {
+                ...data.images.map((item) => {
                   return {
                     // the new image is a file with the only path=name  but the old image that stayed is an object the has a full path
-                    path: `/uploads/produits/${data.reference}/${formatPath(
-                      image.path
+                    path: `/media/${data.reference}/${formatPath(
+                      item.img.path
                     )}`,
-                    index: image.index,
+                    index: item.index,
                   };
                 }),
               ],
@@ -252,56 +252,78 @@ export async function PATCH(
     }
 
     // umplaod images
+   
 
-    fsr.readdir(`./public/uploads/produits/${data.reference}`, (err, files) => {
-      if (err) {
-        data.images.forEach(async (file) => {
-          const arrayBuffer = await file.arrayBuffer();
-          const buffer = new Uint8Array(arrayBuffer);
-          await fs.mkdir(`./public/uploads/produits/${data.reference}`, {
-            recursive: true,
-          });
+    try {
+      const filesData = new FormData();
 
-          await fs.writeFile(
-            `./public/uploads/produits/${data.reference}/${file.name}`,
-            buffer
-          );
-        });
-        console.log("Directory create on update for " + data.reference);
-        return;
-      }
-
-      data.images.forEach(async (image) => {
-        //add new images
-        if (!files.includes(formatPath(image.path))) {
-          const arrayBuffer = await image.arrayBuffer();
-          const buffer = new Uint8Array(arrayBuffer);
-
-          await fs.writeFile(
-            `./public/uploads/produits/${data.reference}/${formatPath(
-              image.name
-            )}`,
-            buffer
-          );
+      filesData.append("reference", data.reference);
+      data.images.forEach((item) => {
+        if (item.img instanceof File) {
+          filesData.append("images", item.img);
+        } else {
+          filesData.append("exsistingimg" +"-"+ item.index, formatPath(item.img.path));
         }
       });
-      //remove extra images
-      files.forEach((file) => {
-        if (
-          !data.images.map((image) => formatPath(image.path)).includes(file)
-        ) {
-          fsr.unlink(
-            `./public/uploads/produits/${data.reference}/${file}`,
-            (err) => {
-              if (err) {
-                console.error(err);
-                return;
-              }
-            }
-          );
-        }
+
+      await fetch("http://localhost:3002/media/produits", {
+        method: "PATCH",
+        body: filesData,
       });
-    });
+    } catch (error) {
+      console.log("[SEND-IMAGES-EROOR]", error);
+      return new NextResponse("Internal error", { status: 500 });
+    }
+
+    // fsr.readdir(`./public/uploads/produits/${data.reference}`, (err, files) => {
+    //   if (err) {
+    //     data.images.forEach(async (file) => {
+    //       const arrayBuffer = await file.arrayBuffer();
+    //       const buffer = new Uint8Array(arrayBuffer);
+    //       await fs.mkdir(`./public/uploads/produits/${data.reference}`, {
+    //         recursive: true,
+    //       });
+
+    //       await fs.writeFile(
+    //         `./public/uploads/produits/${data.reference}/${file.name}`,
+    //         buffer
+    //       );
+    //     });
+    //     console.log("Directory create on update for " + data.reference);
+    //     return;
+    //   }
+
+    //   data.images.forEach(async (image) => {
+    //     //add new images
+    //     if (!files.includes(formatPath(image.path))) {
+    //       const arrayBuffer = await image.arrayBuffer();
+    //       const buffer = new Uint8Array(arrayBuffer);
+
+    //       await fs.writeFile(
+    //         `./public/uploads/produits/${data.reference}/${formatPath(
+    //           image.name
+    //         )}`,
+    //         buffer
+    //       );
+    //     }
+    //   });
+    //   //remove extra images
+    //   files.forEach((file) => {
+    //     if (
+    //       !data.images.map((image) => formatPath(image.path)).includes(file)
+    //     ) {
+    //       fsr.unlink(
+    //         `./public/uploads/produits/${data.reference}/${file}`,
+    //         (err) => {
+    //           if (err) {
+    //             console.error(err);
+    //             return;
+    //           }
+    //         }
+    //       );
+    //     }
+    //   });
+    // });
 
     revalidatePath(`/produit`);
 

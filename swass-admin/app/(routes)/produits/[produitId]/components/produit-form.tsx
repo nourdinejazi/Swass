@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+ 
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,7 +25,13 @@ import SmallSpinner from "@/components/small-spinner";
 import DropZone from "./drop-zone";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@radix-ui/react-checkbox";
+import { Link, MoveLeft,  TicketPercent } from "lucide-react";
+import StockForm from "./stock-form";
+import Currency from "@/components/currency";
 interface ProduitFormProps {
   initialData: any;
   sizes: Tailles[];
@@ -71,19 +79,19 @@ const ProduitForm = ({
   const onSubmit = async (data: z.infer<typeof ProduitFormSchema>) => {
     try {
       const formData = new FormData();
-      // formData.append("nom", data.nom);
-      // formData.append("description", data.description);
-      // formData.append("prix", data.prix.toString());
+      formData.append("nom", data.nom);
+      formData.append("description", data.description);
+      formData.append("prix", data.prix.toString());
       formData.append("reference", data.reference);
-      // formData.append("newCollection", data.newCollection.toString());
-      // formData.append("archived", data.archived.toString());
-      // formData.append("etat", data.etat);
-      // formData.append("modele", data.model);
-      // formData.append("famille", data.famille);
-      // formData.append("categorie", data.categorie);
-      // formData.append("promotion", data.promotion.toString());
-      // formData.append("longeur", data.longeur);
-      // formData.append("stock", JSON.stringify(data.stock));
+      formData.append("newCollection", data.newCollection.toString());
+      formData.append("archived", data.archived.toString());
+      formData.append("etat", data.etat);
+      formData.append("modele", data.model);
+      formData.append("famille", data.famille);
+      formData.append("categorie", data.categorie);
+      formData.append("promotion", data.promotion.toString());
+      formData.append("longeur", data.longeur);
+      formData.append("stock", JSON.stringify(data.stock));
 
       data.images.forEach((image) => {
         if (image instanceof File)
@@ -139,7 +147,7 @@ const ProduitForm = ({
   return (
     <div className=" w-full   h-auto      ">
       {/* <div className="  m-4  no-print flex items-center justify-between   ">
-        <PathSlash />
+        <PathSlash /> 
         <Link
           className="ml-auto"
           href={`/${params.boutiqueId}/gestionespece/Produit`}
@@ -155,33 +163,31 @@ const ProduitForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="max-w-[1500px] h-full space-y-5 py-8         "
         >
-          <FormField
-            control={form.control}
-            name="reference"
-            render={({ field }) => (
-              <FormItem className="flex flex-col items-start justify-center  ">
-                <FormLabel className="text-base">Référence</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    disabled={isPending}
-                    placeholder=""
-                    className="max-w-[400px]"
-                    type="text"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* <div className="max-w-3xl overflow-auto  bg-white p-8 space-y-5   border border-primary  rounded-lg  ">
+          <div className="max-w-3xl overflow-auto  bg-white p-8 space-y-5   border border-primary  rounded-lg  ">
             <h4 className="font-medium">Général</h4>
             <Separator />
-      
-            <div className="flex  items-center   justify-start gap-5 max-w-xl">
 
-         
+            <div className="flex  items-center   justify-start gap-5 max-w-xl">
+              <FormField
+                control={form.control}
+                name="reference"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start justify-center  ">
+                    <FormLabel className="text-base">Référence</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder=""
+                        className="max-w-[400px]"
+                        type="text"
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="nom"
@@ -400,7 +406,7 @@ const ProduitForm = ({
               name="stock"
               render={({ field }) => (
                 <FormItem className="flex flex-col items-start justify-center  ">
-                  <SizeStockForm
+                  <StockForm
                     initialData={field.value}
                     sizes={sizes}
                     colors={colors}
@@ -497,7 +503,7 @@ const ProduitForm = ({
                 </TableRow>
               </TableBody>
             </Table>
-          </div> */}
+          </div>
           <div className=" bg-white p-8 max-w-[900px] space-y-5 overflow-auto   border border-primary  rounded-lg  ">
             <h4 className="font-medium  ">Media</h4>
             <Separator />
@@ -512,7 +518,7 @@ const ProduitForm = ({
               )}
             />
           </div>
-          {/* <div className=" bg-white p-8 space-y-5 max-w-xl  border border-primary  rounded-lg  ">
+          <div className=" bg-white p-8 space-y-5 max-w-xl  border border-primary  rounded-lg  ">
             <FormField
               control={form.control}
               name="promotion"
@@ -557,7 +563,7 @@ const ProduitForm = ({
                 </FormItem>
               )}
             />
-          </div> */}
+          </div>
           <div className="w-full flex justify-center gap-5 sm:justfiy-center  mt-10 flex-wrap   ">
             <Button
               className="w-[150px] bg-[#E9ECEF] text-[#6C757D] hover:bg-[#E9ECEF] "
