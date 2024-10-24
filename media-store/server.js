@@ -6,7 +6,7 @@ const fs = require("fs");
 const app = express();
 // tell express to use '/media' path as static route
 app.use("/media", express.static(path.resolve(__dirname, "./imgs")));
-app.listen(3002, "localhost", (err) => {
+app.listen(3002, "0.0.0.0", (err) => {
   if (err) console.error(err);
   else console.info("Listening at http://localhost:3002");
 });
