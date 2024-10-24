@@ -34,7 +34,7 @@ services:
     ports:
       - 3002:3002
     volumes:
-      - ./images:/imgs
+      - ./images:/app/imgs
     restart: always
 
 
