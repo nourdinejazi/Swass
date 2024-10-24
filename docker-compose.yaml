@@ -33,6 +33,8 @@ services:
       dockerfile: media-store.dockerfile
     ports:
       - 3002:3002
+    volumes:
+      - ./images:/imgs
     restart: always
 
 
