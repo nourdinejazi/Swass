@@ -25,6 +25,17 @@ services:
       - DATABASE_URL=postgresql://postgres:M49BzDnb17JgC5Vqddn2QsdtXoP6b0@swassdb:5432/postgres?schema=public
     restart: always
 
+  media-store:
+    container_name: media-store
+    image: media-store
+    build:
+      context: ./media-store
+      dockerfile: media-store.dockerfile
+    ports:
+      - 3002:3002
+    restart: always
+
+
   swassdb:
     container_name: swassdb
     image: postgres:15.5
