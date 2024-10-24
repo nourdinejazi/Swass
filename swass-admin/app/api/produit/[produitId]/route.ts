@@ -266,7 +266,7 @@ export async function PATCH(
         }
       });
 
-      await fetch("http://localhost:3002/media/produits", {
+      await fetch(`${process.env.MEDIA_URL}/media/produits`, {
         method: "PATCH",
         body: filesData,
       });
