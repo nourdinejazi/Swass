@@ -19,7 +19,7 @@ export default function DropZone({
       ? [
           ...initialData.images.map((image: any) => ({
             ...image,
-            preview: "http://localhost:3002" + image.path,
+            preview: process.env.MEDIA_URL + image.path,
             id: uuid(),
             index: initialData.images.indexOf(image),
           })),
