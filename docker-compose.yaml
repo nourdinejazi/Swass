@@ -34,7 +34,7 @@ services:
     ports:
       - 3002:3002
     volumes:
-      - ./images:/app/imgs
+      - /var/www/swassimgs:/app/imgs
     restart: always
 
 
