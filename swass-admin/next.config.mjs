@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https", // or http
-        hostname: process.env.MEDIA_URL, // if your website has no www, drop it
+        hostname: process.env.NEXT_PUBLIC_MEDIA_DOMAIN, // if your website has no www, drop it
       },
     ],
   },

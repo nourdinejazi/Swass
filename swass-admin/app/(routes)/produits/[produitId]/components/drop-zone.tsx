@@ -14,12 +14,15 @@ export default function DropZone({
   field: any;
   initialData: any;
 }) {
+  console.log("mediauo", process.env.NEXT_PUBLIC_MEDIA_URL);
+  console.log("initialData", initialData);
+
   const [files, setFiles] = useState<{ preview: string; path: string }[]>(
     initialData
       ? [
           ...initialData.images.map((image: any) => ({
             ...image,
-            preview: process.env.MEDIA_URL + image.path,
+            preview: process.env.NEXT_PUBLIC_MEDIA_URL + image.path,
             id: uuid(),
             index: initialData.images.indexOf(image),
           })),
