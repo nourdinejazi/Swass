@@ -127,7 +127,7 @@ export async function POST(req: Request) {
               data: [
                 ...data.images.map((image) => {
                   return {
-                    path: `/media/${data.reference}/${image.img.name}`,
+                    path: `/${data.reference}/${image.img.name}`,
                     index: image.index,
                   };
                 }),

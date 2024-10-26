@@ -220,7 +220,7 @@ export async function PATCH(
                 ...data.images.map((item) => {
                   return {
                     // the new image is a file with the only path=name  but the old image that stayed is an object the has a full path
-                    path: `/media/${data.reference}/${formatPath(
+                    path: `/${data.reference}/${formatPath(
                       item.img.path
                     )}`,
                     index: item.index,
