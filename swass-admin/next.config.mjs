@@ -3,8 +3,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http", // or http
-        hostname: "localhost", // if your website has no www, drop it
+        protocol: "https", // or http
+        hostname: process.env.MEDIA_URL, // if your website has no www, drop it
       },
     ],
   },
