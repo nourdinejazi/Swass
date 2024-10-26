@@ -181,7 +181,7 @@ export async function POST(req: Request) {
         filesData.append("images", file.img);
       });
 
-      await fetch(`${process.env.MEDIA_URL}/media/produits`, {
+      await fetch(`${process.env.INTERNAL_MEDIA_URL}/media/produits`, {
         method: "POST",
         body: filesData,
       });

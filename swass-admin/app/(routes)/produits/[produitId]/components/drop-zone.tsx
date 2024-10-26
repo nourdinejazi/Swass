@@ -14,8 +14,7 @@ export default function DropZone({
   field: any;
   initialData: any;
 }) {
-  console.log("mediauo", process.env.NEXT_PUBLIC_MEDIA_URL);
-  console.log("initialData", initialData);
+
 
   const [files, setFiles] = useState<{ preview: string; path: string }[]>(
     initialData
