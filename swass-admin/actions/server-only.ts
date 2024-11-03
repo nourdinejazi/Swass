@@ -2,8 +2,11 @@ import "server-only";
 
 import { db } from "@/lib/db";
 
-export const getOrders = async () => {
+export const getOrders = async (online: boolean = true) => {
   const data = await db.order.findMany({
+    where: {
+      online: online,
+    },
     include: {
       items: {
         include: {

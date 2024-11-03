@@ -42,97 +42,97 @@ async function seedDatabase() {
     let data;
     //deleteProdsAndStocks();
 
-    // const couleurs = fs.readFileSync(
-    //   "C:/Users/FORGE/projects/swass/prisma/couleur.json",
-    //   "utf-8"
-    // );
-
-    // data = JSON.parse(couleurs);
-
-    // await prisma.couleurs.createMany({
-    //   data,
-    // });
-
-    // const categories = fs.readFileSync(
-    //   "C:/Users/FORGE/projects/swass/prisma/cat.json",
-    //   "utf-8"
-    // );
-
-    // data = JSON.parse(categories);
-
-    // await prisma.categorie.createMany({
-    //   data,
-    // });
-    // const familles = fs.readFileSync(
-    //   "C:/Users/FORGE/projects/swass/prisma/famille.json",
-    //   "utf-8"
-    // );
-
-    // data = JSON.parse(familles);
-
-    // await prisma.famille.createMany({
-    //   data,
-    // });
-
-    // const models = fs.readFileSync(
-    //   "C:/Users/FORGE/projects/swass/prisma/model.json",
-    //   "utf-8"
-    // );
-
-    // data = JSON.parse(models);
-
-    // await prisma.models.createMany({
-    //   data,
-    // });
-
-    // const tailles = fs.readFileSync(
-    //   "C:/Users/FORGE/projects/swass/prisma/taille.json",
-    //   "utf-8"
-    // );
-
-    // data = JSON.parse(tailles);
-
-    // await prisma.tailles.createMany({
-    //   data,
-    // });
-
-    // const produits = fs.readFileSync(
-    //   "C:/Users/FORGE/projects/swass/prisma/products.json",
-    //   "utf-8"
-    // );
-    // data = JSON.parse(produits);
-
-    // await prisma.produit.createMany({
-    //   data,
-    // });
-
-    // const result =
-    //   await prisma.$executeRaw`UPDATE "Produit" SET "prixFinal" = prix - prix * (promotion / 100) ;`;
-
-    const stocks = fs.readFileSync(
-      "C:/Users/FORGE/projects/swass/prisma/stock.json",
+    const couleurs = fs.readFileSync(
+      "C:/Users/FORGE/projects/swass/prisma/couleur.json",
       "utf-8"
     );
 
-    const ids = (await prisma.produit.findMany({})).map((p) => p.id);
+    data = JSON.parse(couleurs);
 
-    data = JSON.parse(stocks);
-
-    let i = 0;
-    let k = 0;
-    console.log("data length", data.length);
-
-    while (k < data.length) {
-      for (let j = k; j < k + 10; j++) {
-        data[j].produitId = ids[i];
-      }
-      k += 10;
-      i++;
-    }
-
-    await prisma.stock.createMany({
+    await prisma.couleurs.createMany({
       data,
     });
+
+    const categories = fs.readFileSync(
+      "C:/Users/FORGE/projects/swass/prisma/cat.json",
+      "utf-8"
+    );
+
+    data = JSON.parse(categories);
+
+    await prisma.categorie.createMany({
+      data,
+    });
+    const familles = fs.readFileSync(
+      "C:/Users/FORGE/projects/swass/prisma/famille.json",
+      "utf-8"
+    );
+
+    data = JSON.parse(familles);
+
+    await prisma.famille.createMany({
+      data,
+    });
+
+    const models = fs.readFileSync(
+      "C:/Users/FORGE/projects/swass/prisma/model.json",
+      "utf-8"
+    );
+
+    data = JSON.parse(models);
+
+    await prisma.models.createMany({
+      data,
+    });
+
+    const tailles = fs.readFileSync(
+      "C:/Users/FORGE/projects/swass/prisma/taille.json",
+      "utf-8"
+    );
+
+    data = JSON.parse(tailles);
+
+    await prisma.tailles.createMany({
+      data,
+    });
+
+    const produits = fs.readFileSync(
+      "C:/Users/FORGE/projects/swass/prisma/products.json",
+      "utf-8"
+    );
+    data = JSON.parse(produits);
+
+    await prisma.produit.createMany({
+      data,
+    });
+
+    const result =
+      await prisma.$executeRaw`UPDATE "Produit" SET "prixFinal" = prix - prix * (promotion / 100) ;`;
+
+    // const stocks = fs.readFileSync(
+    //   "C:/Users/FORGE/projects/swass/prisma/stock.json",
+    //   "utf-8"
+    // );
+
+    // const ids = (await prisma.produit.findMany({})).map((p) => p.id);
+
+    // data = JSON.parse(stocks);
+
+    // let i = 0;
+    // let k = 0;
+    // console.log("data length", data.length);
+
+    // while (k < data.length) {
+    //   for (let j = k; j < k + 10; j++) {
+    //     data[j].produitId = ids[i];
+    //   }
+    //   k += 10;
+    //   i++;
+    // }
+
+    // await prisma.stock.createMany({
+    //   data,
+    // });
 
     // const order = fs.readFileSync(
     //   "C:/Users/FORGE/projects/swass/prisma/order.json",

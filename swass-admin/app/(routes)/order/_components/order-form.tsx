@@ -214,7 +214,7 @@ const OrderFrom = ({ initialData }: OrderFormProps) => {
                           <FormLabel>Mode De Livraison</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            defaultValue={field.value!}
                           >
                             <FormControl>
                               <SelectTrigger>

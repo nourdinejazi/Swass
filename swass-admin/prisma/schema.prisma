@@ -32,8 +32,11 @@ model Address {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
+  name          String
+  firstName     String?
+  lastName      String?
+  email         String?  @unique
+  phone         String
   address       Address?
   emailVerified DateTime?
   image         String?
@@ -205,7 +208,7 @@ model Order {
   customer   User @relation(fields: [customerId], references: [id])
   customerId String
   items OrderItem[]
-  modeLivraison String
+  modeLivraison String?
   modePaiement String
   status String @default("En attente")
   paye Boolean @default(false)
@@ -218,9 +221,11 @@ model Order {
   infoSupp String?
   phone String
   phone2 String?
+  online Boolean @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
 
 
 model OrderItem {

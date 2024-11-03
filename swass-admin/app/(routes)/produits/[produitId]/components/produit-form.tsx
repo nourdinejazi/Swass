@@ -28,7 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Link, MoveLeft,  TicketPercent } from "lucide-react";
 import StockForm from "./stock-form";
 import Currency from "@/components/currency";

@@ -194,7 +194,7 @@ export default function DropZone({
           >
             Remove All
           </Button>
-          <Button
+          {/* <Button
             type="button"
             size={"sm"}
             className="mt-8   font-[600] flex items-center justify-center gap-2  "
@@ -202,7 +202,7 @@ export default function DropZone({
           >
             <UploadCloud size={19} className="font-medium" />
             <span>Upload</span>
-          </Button>
+          </Button> */}
         </div>
       </section>
     </div>

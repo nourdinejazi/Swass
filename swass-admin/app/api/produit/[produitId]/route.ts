@@ -254,26 +254,26 @@ export async function PATCH(
     // umplaod images
    
 
-    try {
-      const filesData = new FormData();
+    // try {
+    //   const filesData = new FormData();
 
-      filesData.append("reference", data.reference);
-      data.images.forEach((item) => {
-        if (item.img instanceof File) {
-          filesData.append("images", item.img);
-        } else {
-          filesData.append("exsistingimg" +"-"+ item.index, formatPath(item.img.path));
-        }
-      });
+    //   filesData.append("reference", data.reference);
+    //   data.images.forEach((item) => {
+    //     if (item.img instanceof File) {
+    //       filesData.append("images", item.img);
+    //     } else {
+    //       filesData.append("exsistingimg" +"-"+ item.index, formatPath(item.img.path));
+    //     }
+    //   });
 
-      await fetch(`${process.env.INTERNAL_MEDIA_URL}/media/produits`, {
-        method: "PATCH",
-        body: filesData,
-      });
-    } catch (error) {
-      console.log("[SEND-IMAGES-EROOR]", error);
-      return new NextResponse("Internal error", { status: 500 });
-    }
+    //   await fetch(`${process.env.INTERNAL_MEDIA_URL}/media/produits`, {
+    //     method: "PATCH",
+    //     body: filesData,
+    //   });
+    // } catch (error) {
+    //   console.log("[SEND-IMAGES-EROOR]", error);
+    //   return new NextResponse("Internal error", { status: 500 });
+    // }
 
     // fsr.readdir(`./public/uploads/produits/${data.reference}`, (err, files) => {
     //   if (err) {

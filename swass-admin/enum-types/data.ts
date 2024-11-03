@@ -16,6 +16,7 @@ export const modeLivraison = [
     value: "Retrait",
     label: "Retrait",
   },
+
 ];
 
 export const modePaiement = [
@@ -27,7 +28,12 @@ export const modePaiement = [
     value: "livraison",
     label: "Livraison",
   },
-];
+  {
+    value: "espece",
+    label: "Espèce",
+  },
+  
+]
 
 export const statuses = [
   {

@@ -29,8 +29,7 @@ export async function POST(req: Request) {
           index: parseInt(key.split("-")[1]),
         });
       }
-   
-       } 
+    }
     let values: z.infer<typeof ProduitFormSchema> = {
       reference: formDataValues.reference.toString(),
       nom: formDataValues.nom.toString(),
@@ -62,7 +61,6 @@ export async function POST(req: Request) {
 
     const data = { ...validatedFields.data };
 
- 
     // if (
     //   !uniqueCouleurStock(data.couleurStock) ||
     //   !uniqueSizeStock(data.sizeStock)
@@ -172,23 +170,26 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-  
-    try {
-      const filesData = new FormData();
 
-      filesData.append("reference", data.reference);
-      data.images.forEach((file) => {
-        filesData.append("images", file.img);
-      });
+    // try {
+    //   const filesData = new FormData();
 
-      await fetch(`${process.env.INTERNAL_MEDIA_URL}/media/produits`, {
-        method: "POST",
-        body: filesData,
-      });
-    } catch (error) {
-      console.log("[SEND-IMAGES-EROOR]", error);
-      return new NextResponse("Internal error", { status: 500 });
-    }
+    //   filesData.append("reference", data.reference);
+    //   data.images.forEach((file) => {
+    //     filesData.append("images", file.img);
+    //   });
+
+    //   await fetch(`${process.env.INTERNAL_MEDIA_URL}/media/produits`, {
+    //     method: "POST",
+    //     body: filesData,
+    //   });
+    // } catch (error) {
+    //   console.log("[SEND-IMAGES-EROOR]", error);
+    //   return NextResponse.json(
+    //     { error: "Probleme upload images !" },
+    //     { status: 400 }
+    //   );
+    // }
 
     // umplaod images
     // data.images.forEach(async (file) => {

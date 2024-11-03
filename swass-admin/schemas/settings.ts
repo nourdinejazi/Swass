@@ -163,7 +163,7 @@ export const OrderSchemaAdmin = z.object({
   infoSupp: z.string().nullable(),
   status: z.string(),
   paye: z.boolean(),
-  modeLivraison: z.string(),
+  modeLivraison: z.string().nullable(),
   modePaiement: z.string(),
   items: z.array(
     z.object({
@@ -175,6 +175,39 @@ export const OrderSchemaAdmin = z.object({
   ),
 });
 
+export const StoreOrderSchemaAdmin = z.object({
+  name: z.string().min(1, {
+    message: "L'nom est obligatoire",
+  }),
+
+  phone: z.string().min(1, {
+    message: "Le téléphone est obigatoire",
+  }),
+
+  email: z
+    .string()
+    .email({
+      message: "Email invalide",
+    })
+    .optional(),
+  infoSupp: z.string().optional(),
+
+  items: z
+    .array(
+      z.object({
+        ref: z.string(),
+        nom: z.string(),
+        images: z.array(z.string()),
+        prixfinal: z.number(),
+        productId: z.number(),
+        promotion: z.number(),
+        quantity: z.number(),
+        couleurId: z.string(),
+        tailleId: z.string(),
+      })
+    )
+    .optional(),
+});
 export type cartItem = Produit & {
   quantity: number;
   selectedCouleur: string;
