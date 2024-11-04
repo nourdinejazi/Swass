@@ -1,9 +1,16 @@
+import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import fs from "node:fs/promises";
 
 export async function POST(req: Request) {
   try {
+    const session = await currentUser();
+    if (!session) {
+      return NextResponse.json({
+        error: "Vous n'êtes pas autorisé à effectuer cette action !",
+      });
+    }
     const formData = await req.formData();
     const title = formData.get("title");
     const description = formData.get("description");

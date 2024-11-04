@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { currentUser } from "@/lib/auth";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,6 +19,12 @@ export async function PATCH(
   req: Request,
   { params }: { params: { produitId: string } }
 ) {
+  const session = await currentUser();
+  if (!session) {
+    return NextResponse.json({
+      error: "Vous n'êtes pas autorisé à effectuer cette action !",
+    });
+  }
   const formatPath = (path: string): string => {
     if (path.includes("/")) {
       return path.split("/")[path.split("/").length - 1];
@@ -220,9 +227,7 @@ export async function PATCH(
                 ...data.images.map((item) => {
                   return {
                     // the new image is a file with the only path=name  but the old image that stayed is an object the has a full path
-                    path: `/${data.reference}/${formatPath(
-                      item.img.path
-                    )}`,
+                    path: `/${data.reference}/${formatPath(item.img.path)}`,
                     index: item.index,
                   };
                 }),
@@ -252,7 +257,6 @@ export async function PATCH(
     }
 
     // umplaod images
-   
 
     // try {
     //   const filesData = new FormData();

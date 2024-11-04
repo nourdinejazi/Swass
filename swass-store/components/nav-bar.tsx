@@ -14,7 +14,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { useMounted } from "@/hooks/use-mounted";
-import { UserButton } from "./auth/user-button";
+
 import { MainNav } from "./main-nav";
 import SearchBar from "@/app/_components/search-bar";
 import { useState } from "react";
@@ -183,14 +183,6 @@ const NavBar = () => {
               </button>
             )}
           </>
-        )}
-
-        {isDesktop && (
-          <UserButton
-            className="size-6 cursor-pointer"
-            authMode="login"
-            redirectUrl="/"
-          />
         )}
 
         {isDesktop && (

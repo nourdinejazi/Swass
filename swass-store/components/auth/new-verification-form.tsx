@@ -1,55 +1,55 @@
-"use client";
+// "use client";
 
-import { useCallback, useEffect, useState } from "react";
+// import { useCallback, useEffect, useState } from "react";
 
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 
-import { newVerification } from "@/server/actions/new-verification";
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import SmallSpinner from "../small-spinner";
+// import { newVerification } from "@/server/actions/new-verification";
+// import { CardWrapper } from "@/components/auth/card-wrapper";
+// import { FormError } from "@/components/form-error";
+// import { FormSuccess } from "@/components/form-success";
+// import SmallSpinner from "../small-spinner";
 
-export const NewVerificationForm = () => {
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
+// export const NewVerificationForm = () => {
+//   const [error, setError] = useState<string | undefined>();
+//   const [success, setSuccess] = useState<string | undefined>();
 
-  const searchParams = useSearchParams();
+//   const searchParams = useSearchParams();
 
-  const token = searchParams.get("token");
+//   const token = searchParams.get("token");
 
-  const onSubmit = useCallback(() => {
-    if (success || error) return;
-    if (!token) {
-      setError("Missing token!");
-      return;
-    }
+//   const onSubmit = useCallback(() => {
+//     if (success || error) return;
+//     if (!token) {
+//       setError("Missing token!");
+//       return;
+//     }
 
-    newVerification(token)
-      .then((data) => {
-        setSuccess(data.success);
-        setError(data.error);
-      })
-      .catch(() => {
-        setError("Something went wrong!");
-      });
-  }, [token, success, error]);
+//     newVerification(token)
+//       .then((data) => {
+//         setSuccess(data.success);
+//         setError(data.error);
+//       })
+//       .catch(() => {
+//         setError("Something went wrong!");
+//       });
+//   }, [token, success, error]);
 
-  useEffect(() => {
-    onSubmit();
-  }, [onSubmit]);
+//   useEffect(() => {
+//     onSubmit();
+//   }, [onSubmit]);
 
-  return (
-    <CardWrapper
-      headerLabel="Confirmation de votre adresse e-mail"
-      backButtonLabel="Back to login"
-      backButtonHref="/auth/login"
-    >
-      <div className="flex items-center w-full justify-center  ">
-        {!success && !error && <SmallSpinner />}
-        <FormSuccess message={success} />
-        {!success && <FormError message={error} />}
-      </div>
-    </CardWrapper>
-  );
-};
+//   return (
+//     <CardWrapper
+//       headerLabel="Confirmation de votre adresse e-mail"
+//       backButtonLabel="Back to login"
+//       backButtonHref="/auth/login"
+//     >
+//       <div className="flex items-center w-full justify-center  ">
+//         {!success && !error && <SmallSpinner />}
+//         <FormSuccess message={success} />
+//         {!success && <FormError message={error} />}
+//       </div>
+//     </CardWrapper>
+//   );
+// };

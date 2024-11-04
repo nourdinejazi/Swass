@@ -1,3 +1,4 @@
+import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { StoreOrderSchemaAdmin } from "@/schemas/settings";
 import { NextResponse } from "next/server";
@@ -7,6 +8,12 @@ export async function PATCH(
   { params }: { params: { orderId: string } }
 ) {
   try {
+    const session = await currentUser();
+    if (!session) {
+      return NextResponse.json({
+        error: "Vous n'êtes pas autorisé à effectuer cette action !",
+      });
+    }
     const body = await req.json();
 
     const validatedFields = StoreOrderSchemaAdmin.safeParse(body);
@@ -26,15 +33,8 @@ export async function PATCH(
         data: {
           phone: validatedFields.data.phone,
           infoSupp: validatedFields.data.infoSupp,
-          nom: validatedFields.data.name.split(" ")[0],
-          prenom: validatedFields.data.name.split(" ")[1],
-          customer: {
-            update: {
-              name: validatedFields.data.name,
-              email: validatedFields.data.email,
-              phone: validatedFields.data.phone,
-            },
-          },
+          nom: validatedFields.data.nom,
+          prenom: validatedFields.data.prenom,
         },
       });
     } catch (error) {

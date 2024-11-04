@@ -9,7 +9,6 @@ interface orderFormInterface {
   setField: (
     groupKey: keyof orderFormInterface["orderForm"],
     fieldKey:
-      | keyof orderFormInterface["orderForm"]["personalInfo"]
       | keyof orderFormInterface["orderForm"]["address"]
       | keyof orderFormInterface["orderForm"]["modeLivraison"]
       | keyof orderFormInterface["orderForm"]["modePaiement"],
@@ -25,10 +24,6 @@ const useOrderForm = create(
   persist<orderFormInterface>(
     (set, get) => ({
       orderForm: {
-        personalInfo: {
-          userId: "",
-          completed: false,
-        },
         address: {
           nom: "",
           prenom: "",
@@ -54,7 +49,6 @@ const useOrderForm = create(
       setField: (
         groupKey: keyof orderFormInterface["orderForm"],
         fieldKey:
-          | keyof orderFormInterface["orderForm"]["personalInfo"]
           | keyof orderFormInterface["orderForm"]["address"]
           | keyof orderFormInterface["orderForm"]["modeLivraison"]
           | keyof orderFormInterface["orderForm"]["modePaiement"],
@@ -72,7 +66,7 @@ const useOrderForm = create(
         });
       },
 
-      selectedGroup: "personalInfo",
+      selectedGroup: "address",
       _hasHydrated: false,
 
       setSelectedGroup: (group: keyof orderFormInterface["orderForm"]) => {

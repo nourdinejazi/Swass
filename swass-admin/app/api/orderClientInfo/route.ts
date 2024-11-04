@@ -1,3 +1,4 @@
+import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import queryString from "query-string";
@@ -9,6 +10,12 @@ const corsHeaders = {
 
 export async function GET(req: Request) {
   try {
+    const session = await currentUser();
+    if (!session) {
+      return NextResponse.json({
+        error: "Vous n'êtes pas autorisé à effectuer cette action !",
+      });
+    }
     const current = queryString.parseUrl(req.url);
 
     const query = current.query;

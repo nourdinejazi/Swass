@@ -91,12 +91,6 @@ export const ProduitFormSchema = z.object({
     }),
 });
 export const OrderSchema = z.object({
-  personalInfo: z.object({
-    userId: z.string().min(1, {
-      message: "L'identifiant de l'utilisateur est obligatoire",
-    }),
-    completed: z.boolean().optional(),
-  }),
   address: z.object({
     nom: z.string().min(1, {
       message: "L'adresse est obligatoire",
@@ -176,7 +170,11 @@ export const OrderSchemaAdmin = z.object({
 });
 
 export const StoreOrderSchemaAdmin = z.object({
-  name: z.string().min(1, {
+  nom: z.string().min(1, {
+    message: "L'nom est obligatoire",
+  }),
+
+  prenom: z.string().min(1, {
     message: "L'nom est obligatoire",
   }),
 

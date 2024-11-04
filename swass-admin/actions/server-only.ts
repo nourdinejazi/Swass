@@ -27,21 +27,21 @@ export const getOrders = async (online: boolean = true) => {
 export type GetListOrdersType = Awaited<ReturnType<typeof getOrders>>;
 export type GetOrderType = GetListOrdersType[number];
 
-export const getCustomers = async () => {
-  const data = await db.user.findMany({
-    where: {
-      role: "USER",
-    },
-    include: {
-      orders: {
-        include: {
-          items: true,
-        },
-      },
-    },
-  });
-  return data;
-};
+// export const getCustomers = async () => {
+//   const data = await db.user.findMany({
+//     where: {
+//       role: "USER",
+//     },
+//     include: {
+//       orders: {
+//         include: {
+//           items: true,
+//         },
+//       },
+//     },
+//   });
+//   return data;
+// };
 
-export type GetListCustomerType = Awaited<ReturnType<typeof getCustomers>>;
-export type GetCustomerType = GetListCustomerType[number];
+// export type GetListCustomerType = Awaited<ReturnType<typeof getCustomers>>;
+// export type GetCustomerType = GetListCustomerType[number];

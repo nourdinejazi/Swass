@@ -40,7 +40,6 @@ export function DataTable<TData, TValue>({
     React.useState<VisibilityState>({
       phone2: false,
       updatedAt: false,
-      customerId: false,
     });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

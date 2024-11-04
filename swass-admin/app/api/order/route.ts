@@ -1,5 +1,6 @@
 import { decrementStock } from "@/actions/api-functions";
 import { db } from "@/lib/db";
+import { rateLimitByIp } from "@/lib/limiter";
 import { cartItem, OrderSchema } from "@/schemas/settings";
 import { NextResponse } from "next/server";
 
@@ -15,6 +16,19 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
+    try {
+      await rateLimitByIp({
+        limit: 2,
+        window: 10000,
+      });
+    } catch (error) {
+      console.log("[rate limit exceeded..]", error);
+      return NextResponse.json(
+        { error: " Veuillez patienter un moment avant de réessayer" },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
     const body = await req.json();
     const { orderInfo, orderedItems } = body;
 
@@ -32,9 +46,9 @@ export async function POST(req: Request) {
 
     //the order items can have the same item twice with diffrence sizes and colors
 
-    const uniqueOrderItems = Array.from(new Set<number>(
-      orderedItems.map((item: cartItem) => item.id)
-    )) 
+    const uniqueOrderItems = Array.from(
+      new Set<number>(orderedItems.map((item: cartItem) => item.id))
+    );
 
     const prods = await db.produit.findMany({
       where: {
@@ -63,71 +77,35 @@ export async function POST(req: Request) {
       }
     };
 
-    const isStockValid = orderedItems.every((item: cartItem) => {
-      const prod = prods.find((p) => p.id === item.id);
+    // const isStockValid = orderedItems.every((item: cartItem) => {
+    //   const prod = prods.find((p) => p.id === item.id);
 
-      if (!prod) {
-        return false;
-      }
+    //   if (!prod) {
+    //     return false;
+    //   }
 
-      const stockItem = prod.stock.find(
-        (stock) =>
-          stock.couleurId === item.selectedCouleur &&
-          stock.tailleId === item.selectedTaille
-      );
+    //   const stockItem = prod.stock.find(
+    //     (stock) =>
+    //       stock.couleurId === item.selectedCouleur &&
+    //       stock.tailleId === item.selectedTaille
+    //   );
 
-      if (!stockItem) {
-        return false;
-      }
+    //   if (!stockItem) {
+    //     return false;
+    //   }
 
-      return stockItem.stock >= item.quantity;
-    });
+    //   return stockItem.stock >= item.quantity;
+    // });
 
-    if (!isStockValid) {
-      return NextResponse.json(
-        { error: "Il ya un Article non disponible!" },
-        { status: 400, headers: corsHeaders }
-      );
-    }
-
-    try {
-      await db.address.upsert({
-        where: { userId: validatedOrderInfo.personalInfo.userId },
-        update: {
-          location: validatedOrderInfo.address.location,
-          city: validatedOrderInfo.address.city,
-          postalCode: validatedOrderInfo.address.postalCode,
-          country: validatedOrderInfo.address.country,
-          phone: validatedOrderInfo.address.phone,
-          phone2: validatedOrderInfo.address.phone2,
-         },
-        create: {
-          firstName: validatedOrderInfo.address.nom,
-          lastName: validatedOrderInfo.address.prenom,
-          location: validatedOrderInfo.address.location,
-          city: validatedOrderInfo.address.city,
-          postalCode: validatedOrderInfo.address.postalCode,
-          country: validatedOrderInfo.address.country,
-          phone: validatedOrderInfo.address.phone,
-          phone2: validatedOrderInfo.address.phone2,
-          userId: validatedOrderInfo.personalInfo.userId,
-        },
-      });
-    } catch (error) {
-      console.log("[ADD-ADDRESS-TO-CUSTOMER-EROOR]", error);
-      return NextResponse.json(
-        { error: "Les Champs sont invalides !" },
-        { status: 400, headers: corsHeaders }
-      );
-    }
+    // if (!isStockValid) {
+    //   return NextResponse.json(
+    //     { error: "Il ya un Article non disponible!" },
+    //     { status: 400, headers: corsHeaders }
+    //   );
+    // }
 
     await db.order.create({
       data: {
-        customer: {
-          connect: {
-            id: validatedOrderInfo.personalInfo.userId,
-          },
-        },
         city: validatedOrderInfo.address.city,
         location: validatedOrderInfo.address.location,
         country: validatedOrderInfo.address.country,

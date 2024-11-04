@@ -40,7 +40,7 @@ export function DataTable<TData, TValue>({
     React.useState<VisibilityState>({
       phone2: false,
       updatedAt: false,
-      customerId: false,
+
       prenom: false,
       status: false,
       modePaiement: false,

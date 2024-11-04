@@ -4,6 +4,7 @@ import queryString from "query-string";
 import { ProduitFormSchema } from "@/schemas/settings";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { currentUser } from "@/lib/auth";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,6 +18,12 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
+    const session = await currentUser();
+    if (!session) {
+      return NextResponse.json({
+        error: "Vous n'êtes pas autorisé à effectuer cette action !",
+      });
+    }
     const formData = await req.formData();
     const formDataValues = Object.fromEntries(formData.entries());
 

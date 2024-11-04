@@ -45,7 +45,7 @@ model User {
   accounts      Account[]
   isTwoFactorEnabled Boolean @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
-  orders        Order[]
+  
 }
 
 model Account {
@@ -205,8 +205,6 @@ model Produit {
 model Order {
   id String @id @default(cuid())
   num Int   @default(autoincrement())
-  customer   User @relation(fields: [customerId], references: [id])
-  customerId String
   items OrderItem[]
   modeLivraison String?
   modePaiement String

@@ -1,5 +1,6 @@
 import { decrementStock, incrementStock } from "@/actions/api-functions";
 import { inactiveOrderStatuses } from "@/enum-types/data";
+import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
@@ -142,6 +143,13 @@ export async function POST(
   req: Request,
   { params }: { params: { orderId: string } }
 ) {
+  const session = await currentUser();
+  if (!session) {
+    return NextResponse.json({
+      error: "Vous n'êtes pas autorisé à effectuer cette action !",
+    });
+  }
+
   try {
     const body = await req.json();
     const { selectedProd, selectedInfo, newQte } = body;

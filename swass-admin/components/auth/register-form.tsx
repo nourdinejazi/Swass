@@ -111,9 +111,7 @@ export const RegisterForm = () => {
         <FormSuccess message={success} />
         <Button disabled={isPending} type="submit" className=" w-full  ">
           <span className="flex gap-3 items-center justify-center">
-            {isPending
-              ? "Ajouter un compte " && <SmallSpinner />
-              : "Ajouter un compte"}
+            {isPending ? <SmallSpinner /> : "Ajouter un compte"}
           </span>
         </Button>
       </form>

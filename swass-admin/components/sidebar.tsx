@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { Menu, Settings, Shirt, ShoppingCart, Store, User } from "lucide-react";
+import { Menu, Settings, Shirt, ShoppingCart, Store } from "lucide-react";
 import { logout } from "@/actions/logout";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
@@ -63,12 +63,6 @@ const SideBar = () => {
       label: "Gestion Produits",
       active: pathname.includes("/produits") ? true : false,
       icon: <Shirt size={25} strokeWidth={2} />,
-    },
-    {
-      href: `/customers`,
-      label: "Gestion des clients",
-      active: pathname.includes("/customers") ? true : false,
-      icon: <User size={25} strokeWidth={2} />,
     },
 
     {

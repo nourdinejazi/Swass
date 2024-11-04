@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
 import "./globals.css";
-import { auth } from "@/auth";
-import { SessionProvider } from "next-auth/react";
+
 import { Toaster } from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/footer";
@@ -20,25 +19,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
   return (
-    <SessionProvider session={session}>
-      <html lang="en">
+    <html lang="en">
+      <head>
         <head>
-          <head>
-            <link rel="icon" href="/favicon.ico" sizes="any" />
-          </head>
-        
+          <link rel="icon" href="/favicon.ico" sizes="any" />
         </head>
-        <body className={cn(barlo.className, "min-w-[350px]")}>
-          <Toaster />
-          <NavBar />
-          <CartSheet />
-          {children}
-          <Footer />
-        </body>
-      </html>
-    </SessionProvider>
+      </head>
+      <body className={cn(barlo.className, "min-w-[350px]")}>
+        <Toaster />
+        <NavBar />
+        <CartSheet />
+        {children}
+        <Footer />
+      </body>
+    </html>
   );
 }

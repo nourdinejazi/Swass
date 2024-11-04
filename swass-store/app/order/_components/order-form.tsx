@@ -24,10 +24,8 @@ import { CheckCheck, ChevronLeft, ChevronRight, Pen } from "lucide-react";
 import Reveal from "@/components/reveal";
 import useOrderForm from "@/hooks/use-order";
 import { OrderSchema } from "@/schemas/settings";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AuthButton } from "@/components/auth/auth-button";
 import useCart from "@/hooks/use-cart";
 import Currency from "@/components/currency";
 import toast from "react-hot-toast";
@@ -46,21 +44,18 @@ import {
 interface OrderFormProps {
   initialData: z.infer<typeof OrderSchema>;
   selectedGroup: keyof z.infer<typeof OrderSchema>;
-  addressInitialized: boolean;
 }
 
-const OrderForm = ({
-  initialData,
-  selectedGroup,
-  addressInitialized,
-}: OrderFormProps) => {
-  const user = useCurrentUser();
+const OrderForm = ({ initialData, selectedGroup }: OrderFormProps) => {
   const cart = useCart();
   const router = useRouter();
-  const [cartEmptyOpen, setCartEmptyOpen] = useState(cart.items.length === 0);
+  const [cartEmptyOpen, setCartEmptyOpen] = useState(
+    cart.items.length === 0 ? true : false
+  );
   const [selected, setSelected] = useState(selectedGroup);
   const [isPending, startTransition] = useTransition();
-  const [editAddress, setEditAddress] = useState(addressInitialized);
+  const [editAddress, setEditAddress] = useState(false);
+  const [ordrerPassed, setOrderPassed] = useState(false);
   const globalForm = useOrderForm();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -83,7 +78,9 @@ const OrderForm = ({
           .then((response) => response.json())
           .then((res) => {
             if (res.success) {
-              // form.reset();
+              form.reset();
+              // cart.removeAll();
+              // setOrderPassed(true);
               toast.success(res.success);
             } else if (res.error) {
               toast.error(res.error);
@@ -116,41 +113,31 @@ const OrderForm = ({
   };
 
   useEffect(() => {
-    if (user) {
-      globalForm.setField("personalInfo", "userId", user.id!);
-      form.setValue("personalInfo.userId", user.id!);
-      globalForm.setField("personalInfo", "completed", true);
-      if (selected === "personalInfo") handleNext("personalInfo", "address");
-    } else {
-      globalForm.setField("personalInfo", "userId", "");
-      globalForm.setField("personalInfo", "completed", false);
-      form.setValue("personalInfo.userId", "");
-      setSelected("personalInfo");
-    }
-  }, [user]);
-
-  useEffect(() => {
     if (cart.items.length === 0) {
       setCartEmptyOpen(true);
     }
-  }, [cart.items.length]);
+  }, [cart.items.length, ordrerPassed]);
 
   if (cart.items.length === 0) {
     return (
-      <AlertDialog open={cartEmptyOpen} onOpenChange={setCartEmptyOpen}>
+      <AlertDialog open={true} onOpenChange={setCartEmptyOpen}>
         <AlertDialogContent className="flex items-start justify-center rounded-md  w-[300px] lg:w-[400px] ">
           <AlertDialogHeader className="hidden">
-            <AlertDialogTitle>Votre panier est vide!</AlertDialogTitle>
-            <AlertDialogDescription>
-              Commencez à ajouter des articles à votre panier
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {ordrerPassed ? "Commande passée" : "Panier vide"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>dec</AlertDialogDescription>
           </AlertDialogHeader>
 
           <div className="   w-full  bg-white  rounded-lg">
-            <div>
-              <h6 className="text-center text-lg">Votre panier est vide!</h6>
+            <div className="space-y-5">
+              <h6 className="text-center text-lg">
+                {ordrerPassed ? "Commande passée avec succès !" : "Panier vide"}
+              </h6>
               <p className="text-center text-sm text-neutral-500">
-                Commencez à ajouter des articles à votre panier
+                {ordrerPassed
+                  ? "Votre commande a été passée avec succès ! Un conseiller vous contactera par téléphone sous peu pour confirmer les détails de votre commande. Merci pour votre confiance et à très bientôt !"
+                  : "Commencez à ajouter des articles à votre panier"}
               </p>
             </div>
             <Button
@@ -183,14 +170,6 @@ const OrderForm = ({
                   <Separator className=" absolute z-10 inset-x-0 top-1/2 lg:top-1/3 w-[90%] bg-[#D9D9D9]  m-auto h-[1px]" />
 
                   <TabLabel
-                    index={1}
-                    completed={globalForm.orderForm.personalInfo.completed}
-                    value={"personalInfo"}
-                    selected={selected}
-                    label="Informations Personelles"
-                  />
-
-                  <TabLabel
                     index={3}
                     completed={globalForm.orderForm.address.completed}
                     value={"address"}
@@ -218,10 +197,6 @@ const OrderForm = ({
               <Reveal key={selectedGroup}>
                 <div className="flex flex-col lg:flex-row  lg:gap-10   w-full ">
                   <div className=" mt-4  flex-grow max-w-2xl  ">
-                    <TabsContent value="personalInfo">
-                      <PersonalInfoForm />
-                    </TabsContent>
-
                     <TabsContent
                       className="  bg-white p-8 rounded-lg space-y-5"
                       value="address"
@@ -469,50 +444,50 @@ const TabLabel = ({
   );
 };
 
-const PersonalInfoForm = () => {
-  return (
-    <section className="max-w-2xl flex-col lg:flex-row   bg-white p-4 lg:p-8 rounded-lg flex items-stretch justify-center gap-5 ">
-      <div className="flex flex-col gap-5 w-full lg:max-w-sm lg:border-r lg:pr-8 border-[#D9D9D9] border-b lg:border-b-0 lg:pb-0 pb-8  ">
-        <h3 className="text-[#B3B3B3]">Commander en tant que Nouveau Client</h3>
-        <p className="text-black text-sm lg:text-base">
-          Créer un compte a de nombreux avantages :
-        </p>
-        <ul className="list-disc pl-8 text-black text-sm lg:text-base ">
-          <li>Suivre l'historique des commandes</li>
-          <li>Commander plus rapidement</li>
-        </ul>
+// const PersonalInfoForm = () => {
+//   return (
+//     <section className="max-w-2xl flex-col lg:flex-row   bg-white p-4 lg:p-8 rounded-lg flex items-stretch justify-center gap-5 ">
+//       <div className="flex flex-col gap-5 w-full lg:max-w-sm lg:border-r lg:pr-8 border-[#D9D9D9] border-b lg:border-b-0 lg:pb-0 pb-8  ">
+//         <h3 className="text-[#B3B3B3]">Commander en tant que Nouveau Client</h3>
+//         <p className="text-black text-sm lg:text-base">
+//           Créer un compte a de nombreux avantages :
+//         </p>
+//         <ul className="list-disc pl-8 text-black text-sm lg:text-base ">
+//           <li>Suivre l'historique des commandes</li>
+//           <li>Commander plus rapidement</li>
+//         </ul>
 
-        <AuthButton
-          className="bg-[#00A91B] cursor-pointer text-white border border-none px-3 p-2 transition-colors hover:bg-green-500 rounded-md flex items-center justify-center gap-2  lg:ml-auto"
-          authMode="register"
-          redirectUrl="/order"
-        >
-          <span>
-            Créer un compte <ChevronRight size={20} />
-          </span>
-        </AuthButton>
-      </div>
+//         <AuthButton
+//           className="bg-[#00A91B] cursor-pointer text-white border border-none px-3 p-2 transition-colors hover:bg-green-500 rounded-md flex items-center justify-center gap-2  lg:ml-auto"
+//           authMode="register"
+//           redirectUrl="/order"
+//         >
+//           <span>
+//             Créer un compte <ChevronRight size={20} />
+//           </span>
+//         </AuthButton>
+//       </div>
 
-      <div className="  max-w-sm  flex flex-col gap-5">
-        <h3 className="text-[#B3B3B3]">Commander en utilisant votre compte</h3>
-        <p className="text-black text-sm lg:text-base">
-          Si vous avez un compte, voulez-vous vous authentifier pour suivre
-          votre commande
-        </p>
+//       <div className="  max-w-sm  flex flex-col gap-5">
+//         <h3 className="text-[#B3B3B3]">Commander en utilisant votre compte</h3>
+//         <p className="text-black text-sm lg:text-base">
+//           Si vous avez un compte, voulez-vous vous authentifier pour suivre
+//           votre commande
+//         </p>
 
-        <AuthButton
-          className="bg-[#00A91B] cursor-pointer text-white border border-none px-3 p-2 transition-colors hover:bg-green-500 rounded-md flex items-center justify-center gap-2   lg:ml-auto mt-auto"
-          authMode="login"
-          redirectUrl="/order"
-        >
-          <span>
-            Connection <ChevronRight size={20} />
-          </span>
-        </AuthButton>
-      </div>
-    </section>
-  );
-};
+//         <AuthButton
+//           className="bg-[#00A91B] cursor-pointer text-white border border-none px-3 p-2 transition-colors hover:bg-green-500 rounded-md flex items-center justify-center gap-2   lg:ml-auto mt-auto"
+//           authMode="login"
+//           redirectUrl="/order"
+//         >
+//           <span>
+//             Connection <ChevronRight size={20} />
+//           </span>
+//         </AuthButton>
+//       </div>
+//     </section>
+//   );
+// };
 
 const AddressForm = ({ form }: any) => {
   const globalForm = useOrderForm();
@@ -791,14 +766,14 @@ const PaiementForm = ({ form, isPending }: any) => {
                 defaultValue={field.value}
                 className="     space-y-3"
               >
-                <FormItem className="  flex border flex-wrap p-3 rounded-xl items-center space-x-3 space-y-0">
+                {/* <FormItem className="  flex border flex-wrap p-3 rounded-xl items-center space-x-3 space-y-0">
                   <FormControl>
                     <RadioGroupItem disabled={isPending} value="carte" />
                   </FormControl>
                   <FormLabel className=" cursor-pointer text-accent">
                     Paiement par carte bancaire 
                   </FormLabel>
-                </FormItem>
+                </FormItem> */}
 
                 <FormItem className="    flex border flex-wrap  p-3 rounded-xl items-center space-x-3 space-y-0">
                   <FormControl>

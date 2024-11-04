@@ -3,8 +3,6 @@ import StoreOrderFrom from "../../_components/store-order-form";
 import { StoreOrderSchemaAdmin } from "@/schemas/settings";
 import { z } from "zod";
 
-export const dynamic = "force-dynamic";
-
 const OrderFormClient = async ({ params }: { params: { orderId: string } }) => {
   const order = await db.order.findUnique({
     where: {
@@ -12,7 +10,6 @@ const OrderFormClient = async ({ params }: { params: { orderId: string } }) => {
     },
 
     include: {
-      customer: true,
       items: {
         select: {
           product: {
@@ -32,9 +29,10 @@ const OrderFormClient = async ({ params }: { params: { orderId: string } }) => {
 
   if (order) {
     formattedData = {
-      name: order.customer.name,
-      phone: order.customer.phone,
-      email: order.customer.email,
+      nom: order.nom,
+      prenom: order.prenom,
+      phone: order.phone,
+
       infoSupp: order.infoSupp || "",
       items: order.items.map((item) => {
         return {

@@ -3,7 +3,6 @@ import TableFallBack from "@/components/table-fallback";
 import { Suspense } from "react";
 import Header from "@/components/header";
 import OrderClient from "./_components/order-client";
-export const dynamic = "force-dynamic";
 
 const RetraitPage = async () => {
   return (

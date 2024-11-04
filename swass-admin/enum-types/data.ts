@@ -16,7 +16,6 @@ export const modeLivraison = [
     value: "Retrait",
     label: "Retrait",
   },
-
 ];
 
 export const modePaiement = [
@@ -32,8 +31,7 @@ export const modePaiement = [
     value: "espece",
     label: "Espèce",
   },
-  
-]
+];
 
 export const statuses = [
   {
@@ -153,3 +151,5 @@ export const longueurs = [
 ];
 
 export const inactiveOrderStatuses = ["injoignable", "annule", "retour"];
+
+export const admins = ["ADMIN", "SUPERADMIN"];

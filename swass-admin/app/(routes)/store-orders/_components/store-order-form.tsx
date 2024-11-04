@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 
 import { StoreOrderSchemaAdmin } from "@/schemas/settings";
-import { AlertCircle, RefreshCcw, ShoppingBag, SquarePen } from "lucide-react";
+import { AlertCircle, ShoppingBag, SquarePen } from "lucide-react";
 
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -70,19 +70,17 @@ const StoreOrderFrom = ({ initialData }: OrderFormProps) => {
   const form = useForm<z.infer<typeof StoreOrderSchemaAdmin>>({
     resolver: zodResolver(StoreOrderSchemaAdmin),
     defaultValues: initialData || {
-      name: "",
-      email: "",
+      nom: "",
+      prenom: "",
       phone: "",
       infoSupp: "",
-      items: [],
     },
   });
 
   const onSubmit = (data: z.infer<typeof StoreOrderSchemaAdmin>) => {
-    console.log(data);
     try {
       setIsPending(true);
-      fetch(`/api/customer/${params.orderId}`, {
+      fetch(`/api/orderClientInfo/${params.orderId}`, {
         body: JSON.stringify(data),
         method: "PATCH",
       })
@@ -120,7 +118,7 @@ const StoreOrderFrom = ({ initialData }: OrderFormProps) => {
                 <div className="flex text-black items-center justify-start w-full   gap-5">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="nom"
                     render={({ field }) => (
                       <FormItem className="w-1/2">
                         <FormLabel>Nom</FormLabel>
@@ -135,21 +133,26 @@ const StoreOrderFrom = ({ initialData }: OrderFormProps) => {
                     )}
                   />
                 </div>
+
                 <div className="flex text-black items-center justify-start w-full   gap-5">
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="prenom"
                     render={({ field }) => (
                       <FormItem className="w-1/2">
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Prénom</FormLabel>
                         <FormControl>
-                          <Input placeholder="Taper votre ville" {...field} />
+                          <Input
+                            placeholder="Taper le nom de client"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
+                </div>
+                <div className="flex text-black items-center justify-start w-full   gap-5">
                   <FormField
                     control={form.control}
                     name="infoSupp"
@@ -210,7 +213,6 @@ const StoreOrderFrom = ({ initialData }: OrderFormProps) => {
 export default StoreOrderFrom;
 
 const AddClientOrder = () => {
-  const [createNewClient, setCreateNewClient] = React.useState(true);
   const [nom, setNom] = React.useState("");
   const [prenom, setPrenom] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -248,89 +250,71 @@ const AddClientOrder = () => {
   return (
     <section className="space-y-3 max-w-[400px]">
       <div className="flex items-center justify-between  ">
-        <Label className=" ">Nouveau Client</Label>
-        <Button
-          type="button"
-          className="flex items-center justify-center gap-2 "
-          onClick={() => setCreateNewClient(!createNewClient)}
-        >
-          {createNewClient ? "Non" : "Oui"}
-          <RefreshCcw size={20}></RefreshCcw>
-        </Button>
+        <Label className=" ">Nom</Label>
+        <Input
+          className="w-1/2"
+          value={nom}
+          placeholder="Nom"
+          onChange={(ev) => {
+            setNom(ev.target.value);
+          }}
+        />
       </div>
-      <Separator />
-      {!createNewClient ? (
-        <ClientComboBox />
-      ) : (
-        <>
-          <div className="flex items-center justify-between  ">
-            <Label className=" ">Nom</Label>
-            <Input
-              className="w-1/2"
-              value={nom}
-              placeholder="Nom"
-              onChange={(ev) => {
-                setNom(ev.target.value);
-              }}
-            />
-          </div>
 
-          <div className="flex items-center justify-between ">
-            <Label className=" ">Prenom</Label>
-            <Input
-              className="w-1/2"
-              value={prenom}
-              placeholder="Prenom"
-              onChange={(ev) => {
-                setPrenom(ev.target.value);
-              }}
-            />
-          </div>
+      <div className="flex items-center justify-between ">
+        <Label className=" ">Prenom</Label>
+        <Input
+          className="w-1/2"
+          value={prenom}
+          placeholder="Prenom"
+          onChange={(ev) => {
+            setPrenom(ev.target.value);
+          }}
+        />
+      </div>
 
-          <div className="flex items-center justify-between ">
-            <Label className=" ">Email</Label>
-            <Input
-              className="w-1/2"
-              value={email}
-              placeholder="Email"
-              onChange={(ev) => {
-                setEmail(ev.target.value);
-              }}
-            />
-          </div>
+      <div className="flex items-center justify-between ">
+        <Label className=" ">Email</Label>
+        <Input
+          className="w-1/2"
+          value={email}
+          placeholder="Email"
+          onChange={(ev) => {
+            setEmail(ev.target.value);
+          }}
+        />
+      </div>
 
-          <div className="flex items-center justify-between ">
-            <Label className=" ">Téléphone</Label>
-            <Input
-              className="w-1/2"
-              value={phone}
-              placeholder="Téléphone"
-              onChange={(ev) => {
-                setPhone(ev.target.value);
-              }}
-            />
-          </div>
+      <div className="flex items-center justify-between ">
+        <Label className=" ">Téléphone</Label>
+        <Input
+          className="w-1/2"
+          value={phone}
+          placeholder="Téléphone"
+          onChange={(ev) => {
+            setPhone(ev.target.value);
+          }}
+        />
+      </div>
 
-          <div className="flex items-center justify-between ">
-            <Label className=" ">Info Supp</Label>
-            <Input
-              className="w-1/2"
-              value={infoSupp}
-              placeholder="Information supp"
-              onChange={(ev) => {
-                setInfoSupp(ev.target.value);
-              }}
-            />
-          </div>
-          <Button
-            type="button"
-            className="flex items-center justify-center gap-2 "
-            onClick={() => onSubmitNewClient()}
-          >
-            Ajouter
-          </Button>
-        </>
-      )}
+      <div className="flex items-center justify-between ">
+        <Label className=" ">Info Supp</Label>
+        <Input
+          className="w-1/2"
+          value={infoSupp}
+          placeholder="Information supp"
+          onChange={(ev) => {
+            setInfoSupp(ev.target.value);
+          }}
+        />
+      </div>
+      <Button
+        type="button"
+        className="flex items-center justify-center gap-2 "
+        onClick={() => onSubmitNewClient()}
+      >
+        Ajouter {isPending && <SmallSpinner />}
+      </Button>
     </section>
   );
 };

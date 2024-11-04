@@ -355,17 +355,6 @@ export const OrderColumns: ColumnDef<GetOrderType>[] = [
   },
 
   {
-    accessorKey: "customerId",
-    id: "customerId",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="ID Client" />;
-    },
-    cell: ({ row }) => {
-      return <span className="text-sm">{row.original.customerId}</span>;
-    },
-  },
-
-  {
     accessorKey: "phone",
     id: "phone",
     header: ({ column }) => {
