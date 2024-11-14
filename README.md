@@ -30,6 +30,8 @@ Swass is a comprehensive e-commerce website with a dual-purpose design: a sleek 
    ```bash
    git clone https://github.com/yourusername/swass.git
    cd swass
+   
+```bash
 docker-compose up -d
 
 swass/
