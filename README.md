@@ -23,15 +23,11 @@ Swass is a comprehensive e-commerce website with a dual-purpose design: a sleek 
 - Docker & Docker Compose installed
 - MongoDB URI (or use the MongoDB container provided)
 
-### Installation
 
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/yourusername/swass.git
-   cd swass
-   
 ```bash
+git clone https://github.com/yourusername/swass.git
+cd swass
+   
 docker-compose up -d
 
 swass/
