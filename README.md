@@ -1,19 +1,17 @@
 # Swass
 
-Swass is a comprehensive e-commerce website with a dual-purpose design: a sleek customer-facing storefront and a powerful admin dashboard. Engineered for streamlined deployment using Docker, Swass leverages an Express server to efficiently serve product images, optimizing performance for a seamless shopping experience.
-
 ## ✨ Features
 
 - **Customer Website**: Shop from a variety of products, with a smooth add-to-cart and checkout experience.
 - **Admin Dashboard**: Manage products, view customer orders, and oversee user accounts all in one place.
-- **Efficient Image Serving**: Uses an Express server to serve images for better load times and caching.
+- **Image Serving**: Uses an Express server to serve images for better load times and caching.
 - **Dockerized Deployment**: Ensures easy setup, consistent environments, and scalability across different platforms.
 
 ## 🛠 Tech Stack
 
-- **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Node.js, Express
-- **Database**: MongoDB (or any preferred database)
+- **Frontend**: HTML, CSS, Typescript, NextJS
+- **Backend**: Node.js, Express, NextJS
+- **Database**: PostgreSQL
 - **Docker**: Simplifies deployment with containers for the app and database
 
 ## 🚀 Getting Started
